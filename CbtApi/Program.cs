@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using CbtApi.Utility;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -22,20 +24,24 @@ namespace CbtApi
                                  .AddJsonFile($"appsettings.{environment}.json", true, true)
                                  .Build();
 
-            Log.Logger = new LoggerConfiguration()
-           .ReadFrom.Configuration(configuration)
-           .Enrich.FromLogContext()
-           .CreateLogger();
+
+            var services = new ServiceCollection();
+
+            services.ResiterLogger(configuration);
+
+            var provider = services.BuildServiceProvider();
+
+            var log = provider.GetService<Serilog.ILogger>();
 
 
             try
             {
-                Log.Information("Starting up");
+                log.Information("Starting up");
                 CreateHostBuilder(args).Build().Run();
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "Application start-up failed");
+                log.Fatal(ex, "Application start-up failed");
             }
             finally
             {

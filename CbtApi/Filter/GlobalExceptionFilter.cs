@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,9 @@ namespace CbtApi.Utility.Filter
     {
         public static object Json { get; private set; }
 
-        public static void ConfigureExceptionHandler(this IApplicationBuilder app, ILoggerFactory logger)
+        public static void ConfigureExceptionHandler(this IApplicationBuilder app, Serilog.ILogger logger)
             {
+            
                 app.UseExceptionHandler(appError =>
                 {
                     appError.Run(async context =>
@@ -32,10 +34,10 @@ namespace CbtApi.Utility.Filter
                         {
 
                             
-                            logger.CreateLogger(typeof(Serilog.Log)).LogError($"Something went wrong: {contextFeature.Error}");
-
+                            logger.Information($"Something went wrong: {contextFeature.Error}");
 
                          
+
                             if (contextFeature.Error.GetType() == typeof(ProcessException))
                             {
 

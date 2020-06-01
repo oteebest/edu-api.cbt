@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using CbtApi.Authorization;
 using CbtApi.Core.Models;
 using CbtApi.Infrastructure.Context;
 using CbtApi.Infrastructure.Entities;
@@ -17,7 +18,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.Net.Http.Headers;
+using Serilog;
 
 namespace CbtApi
 {
@@ -56,12 +59,32 @@ namespace CbtApi
                 options.Filters.Add(typeof(ValidateModelStateAttribute));
             });
 
-            services.AddHttpContextAccessor();
-
             var identyOptions = new IdentityOptions();
             Configuration.GetSection("IdentityOptions").Bind(identyOptions);
 
-           
+
+            services.AddHttpContextAccessor();
+
+            services.AddHttpClient("IDPClient", client =>
+            {
+                client.BaseAddress = new Uri(identyOptions.Authority);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+            });
+
+            services.AddAuthorization(authorizationOptions =>
+            {
+              
+                authorizationOptions.AddPolicy(
+                   "MustBeAssessmentOwner",
+                   policyBuilder =>
+                   {
+                       policyBuilder.RequireAuthenticatedUser();
+                       policyBuilder.AddRequirements(
+                             new MustBeAssessmentOwnerRequirement());
+                   });
+            });
+
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
              .AddIdentityServerAuthentication(options =>
              {
@@ -77,23 +100,29 @@ namespace CbtApi
          
             services.RegisterCoreService(Configuration);
 
+            services.ResiterLogger(Configuration);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger logger)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                IdentityModelEventSource.ShowPII = true;
             }
 
             app.UseCors(MyAllowSpecificOrigins);
 
-            app.ConfigureExceptionHandler(loggerFactory);
+            app.ConfigureExceptionHandler(logger);
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

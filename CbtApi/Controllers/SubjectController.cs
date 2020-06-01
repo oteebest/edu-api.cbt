@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CbtApi.Controllers
 {
+    [ApiController]
+    [Route("api/vi/[controller]")]
     public class SubjectController : Controller
     {
         public IActionResult Index()

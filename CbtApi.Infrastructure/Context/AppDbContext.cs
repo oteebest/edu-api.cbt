@@ -17,6 +17,9 @@ namespace CbtApi.Infrastructure.Context
         public DbSet<AssessmentQuestion> AssessmentQuestions { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Option> Options { get; set; }
+        public DbSet<Topic> Topics { get; set; }
+        public DbSet<QuestionGroup> QuestionGroups { get; set; }
+    
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,9 +27,13 @@ namespace CbtApi.Infrastructure.Context
 
             modelBuilder.ApplyConfiguration(new AssessmentConfig());
             modelBuilder.ApplyConfiguration(new AssessmentQuestionConfig());
-
             modelBuilder.ApplyConfiguration(new QuestionConfig());
             modelBuilder.ApplyConfiguration(new OptionConfig());
+            modelBuilder.ApplyConfiguration(new QuestionGroupConfig());
+            modelBuilder.ApplyConfiguration(new TopicConfig());
+      
+
+
 
         }
     }

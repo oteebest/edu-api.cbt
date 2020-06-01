@@ -3,15 +3,17 @@ using System;
 using CbtApi.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CbtApi.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200426233851_QuestionGroupTopics")]
+    partial class QuestionGroupTopics
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,12 +100,14 @@ namespace CbtApi.Infrastructure.Migrations
                     b.Property<int>("DifficultyLevelId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("GroupId")
+                        .HasColumnType("text");
+
                     b.Property<int>("OptionCount")
                         .HasColumnType("integer");
 
-                    b.Property<string>("QuestionGroupId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("QuestionGroupId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("QuestionType")
                         .IsRequired()
@@ -119,8 +123,10 @@ namespace CbtApi.Infrastructure.Migrations
                     b.Property<int>("SubjectId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("TopicId")
-                        .IsRequired()
+                    b.Property<int>("TopicId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("TopicId1")
                         .HasColumnType("text");
 
                     b.Property<string>("UserId")
@@ -128,9 +134,9 @@ namespace CbtApi.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionGroupId");
+                    b.HasIndex("GroupId");
 
-                    b.HasIndex("TopicId");
+                    b.HasIndex("TopicId1");
 
                     b.ToTable("Questions");
                 });
@@ -184,17 +190,13 @@ namespace CbtApi.Infrastructure.Migrations
 
             modelBuilder.Entity("CbtApi.Infrastructure.Entities.Question", b =>
                 {
-                    b.HasOne("CbtApi.Infrastructure.Entities.QuestionGroup", "QuestionGroup")
+                    b.HasOne("CbtApi.Infrastructure.Entities.QuestionGroup", "Group")
                         .WithMany("Questions")
-                        .HasForeignKey("QuestionGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GroupId");
 
                     b.HasOne("CbtApi.Infrastructure.Entities.Topic", "Topic")
                         .WithMany("Questions")
-                        .HasForeignKey("TopicId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TopicId1");
                 });
 #pragma warning restore 612, 618
         }

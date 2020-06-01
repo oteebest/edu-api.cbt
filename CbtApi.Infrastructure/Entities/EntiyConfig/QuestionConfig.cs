@@ -13,6 +13,17 @@ namespace CbtApi.Infrastructure.Entities.EntiyConfig
             builder.Property(u => u.QuestionType)
              .IsRequired()
              .HasMaxLength(50);
+
+            builder.HasOne(u => u.Topic)
+                .WithMany(u => u.Questions)
+                .HasForeignKey(u => u.TopicId)
+                .IsRequired();
+
+
+            builder.HasOne(u => u.QuestionGroup)
+                .WithMany(u => u.Questions)
+                .HasForeignKey(u => u.QuestionGroupId)
+                .IsRequired();
         }
     }
 }

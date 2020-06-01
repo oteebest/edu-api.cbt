@@ -4,11 +4,10 @@ using System.Text;
 
 namespace CbtApi.Infrastructure.Entities
 {
-    public class Assessment : Entity
+    public class Topic : Entity
     {
+        public List<Question> Questions { get; set; }
+
         public string Name { get; set; }
-
-        public string UserId { get; set; }
-
     }
 }
