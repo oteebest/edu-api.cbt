@@ -13,6 +13,7 @@ namespace CbtApi.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Authorize]
     public class AssessmentController : Controller
     {
         private readonly IAssessmentManager _assMan;
@@ -22,28 +23,34 @@ namespace CbtApi.Controllers
             _assMan = assMan;
         }
 
-        [HttpPost("")]
-     //   [Authorize]
+        [HttpPost("")]      
         public async Task<IActionResult> CreateAssessment(AssessmentRequestModel model)
         {
-           // var userId = User.Claims.First(u => u.Type.Equals("sub")).Value;
+             var userId = User.Claims.First(u => u.Type.Equals("sub")).Value;
 
-             string userId = "818727";
-
-            var response = await _assMan.CreateAssessment(model, userId);
+             var response = await _assMan.CreateAssessment(model, userId);
             
             var responseModel = new ResponseModel<AssessmentResponseModel>(response, true, "Assessment created successfully");
            
             return Ok(responseModel);
         }
 
+        [HttpDelete("{id}")]
+        [Authorize("MustBeAssessmentOwner")]
+        public async Task<IActionResult> DeleteAssessment(string id)
+        {
+     
+            await _assMan.DeleteAssesmentAsync(id);
+
+            var responseModel = new ResponseModel<AssessmentResponseModel>(null,true, "Assessment deleted successfully");
+
+            return Ok(responseModel);
+        }
+
         [HttpGet("")]
-        [Authorize]
         public async Task<IActionResult> GetAssessments()
         {
             var userId = User.Claims.First( u => u.Type.Equals("sub")).Value;
-
-           // string userId = "818727";
 
             var response = await _assMan.GetUserAssessmentsAsync(userId);
 
@@ -55,15 +62,23 @@ namespace CbtApi.Controllers
 
         [HttpGet("{id}")]
         [Authorize("MustBeAssessmentOwner")]
-        public IActionResult GetAssessment(string id)
+        public async Task<IActionResult> GetAssessment(string id)
         {
-            return Ok();
+            var asessment =  await _assMan.GetAssessmentsAsync(id);
+
+            return Ok(asessment);
         }
 
-        [HttpPut("id")]
-        public IActionResult UpdateAssessment(string id, AssessmentRequestModel model )
+        [HttpPut("{id}")]
+        [Authorize("MustBeAssessmentOwner")]
+        public async Task<IActionResult> UpdateAssessment(string id, AssessmentRequestModel model )
         {
-            return Ok();
+            
+            var response = await _assMan.UpdateAssessmentAsync(id,model);
+
+            var responseModel = new ResponseModel<AssessmentResponseModel>(response, true, "Assessment created successfully");
+
+            return Ok(responseModel);
         }
 
     }

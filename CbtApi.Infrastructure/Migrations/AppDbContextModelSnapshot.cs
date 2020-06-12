@@ -22,10 +22,17 @@ namespace CbtApi.Infrastructure.Migrations
             modelBuilder.Entity("CbtApi.Infrastructure.Entities.Assessment", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset>("CreateOn")
+                    b.Property<DateTimeOffset>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Instructions")
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -46,7 +53,7 @@ namespace CbtApi.Infrastructure.Migrations
                     b.Property<string>("AssessmentId")
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset>("CreateOn")
+                    b.Property<DateTimeOffset>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("QuestionId")
@@ -62,12 +69,30 @@ namespace CbtApi.Infrastructure.Migrations
                     b.ToTable("AssessmentQuestions");
                 });
 
+            modelBuilder.Entity("CbtApi.Infrastructure.Entities.DifficultyLevel", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DifficultyLevels");
+                });
+
             modelBuilder.Entity("CbtApi.Infrastructure.Entities.Option", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset>("CreateOn")
+                    b.Property<DateTimeOffset>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsAnswer")
@@ -90,20 +115,17 @@ namespace CbtApi.Infrastructure.Migrations
             modelBuilder.Entity("CbtApi.Infrastructure.Entities.Question", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset>("CreateOn")
+                    b.Property<DateTimeOffset>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("DifficultyLevelId")
-                        .HasColumnType("integer");
+                    b.Property<string>("DifficultyLevelId")
+                        .HasColumnType("text");
 
                     b.Property<int>("OptionCount")
                         .HasColumnType("integer");
-
-                    b.Property<string>("QuestionGroupId")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("QuestionType")
                         .IsRequired()
@@ -116,11 +138,10 @@ namespace CbtApi.Infrastructure.Migrations
                     b.Property<bool>("ShuffleOptions")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("integer");
+                    b.Property<string>("SubjectId")
+                        .HasColumnType("text");
 
-                    b.Property<string>("TopicId")
-                        .IsRequired()
+                    b.Property<string>("Text")
                         .HasColumnType("text");
 
                     b.Property<string>("UserId")
@@ -128,32 +149,20 @@ namespace CbtApi.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionGroupId");
+                    b.HasIndex("DifficultyLevelId");
 
-                    b.HasIndex("TopicId");
+                    b.HasIndex("SubjectId");
 
                     b.ToTable("Questions");
                 });
 
-            modelBuilder.Entity("CbtApi.Infrastructure.Entities.QuestionGroup", b =>
+            modelBuilder.Entity("CbtApi.Infrastructure.Entities.Subject", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset>("CreateOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("QuestionGroups");
-                });
-
-            modelBuilder.Entity("CbtApi.Infrastructure.Entities.Topic", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<DateTimeOffset>("CreateOn")
+                    b.Property<DateTimeOffset>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -161,7 +170,7 @@ namespace CbtApi.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Topics");
+                    b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("CbtApi.Infrastructure.Entities.AssessmentQuestion", b =>
@@ -179,22 +188,19 @@ namespace CbtApi.Infrastructure.Migrations
                 {
                     b.HasOne("CbtApi.Infrastructure.Entities.Question", "Question")
                         .WithMany("Options")
-                        .HasForeignKey("QuestionId");
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("CbtApi.Infrastructure.Entities.Question", b =>
                 {
-                    b.HasOne("CbtApi.Infrastructure.Entities.QuestionGroup", "QuestionGroup")
+                    b.HasOne("CbtApi.Infrastructure.Entities.DifficultyLevel", "DifficultyLevel")
                         .WithMany("Questions")
-                        .HasForeignKey("QuestionGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DifficultyLevelId");
 
-                    b.HasOne("CbtApi.Infrastructure.Entities.Topic", "Topic")
+                    b.HasOne("CbtApi.Infrastructure.Entities.Subject", "Subject")
                         .WithMany("Questions")
-                        .HasForeignKey("TopicId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SubjectId");
                 });
 #pragma warning restore 612, 618
         }

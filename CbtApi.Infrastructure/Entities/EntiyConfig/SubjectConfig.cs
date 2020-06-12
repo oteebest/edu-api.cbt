@@ -6,11 +6,12 @@ using System.Text;
 
 namespace CbtApi.Infrastructure.Entities.EntiyConfig
 {
-    public class TopicConfig : IEntityTypeConfiguration<Topic>
+    public class SubjectConfig : IEntityTypeConfiguration<Subject>
     {
-        public void Configure(EntityTypeBuilder<Topic> builder)
+        public void Configure(EntityTypeBuilder<Subject> builder)
         {
-           
+            builder.Property(u => u.Id)
+                .ValueGeneratedOnAdd();
         }
     }
 }

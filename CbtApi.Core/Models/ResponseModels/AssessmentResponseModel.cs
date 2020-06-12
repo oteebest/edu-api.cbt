@@ -8,6 +8,8 @@ namespace CbtApi.Core.Models.ResponseModels
     public class AssessmentResponseModel : AssessmentRequestModel
     {
         public string Id { get; set; }
-        public DateTimeOffset CreateOn { get; set; }
+        public DateTimeOffset CreatedOn { get; set; }
+
+       
     }
 }

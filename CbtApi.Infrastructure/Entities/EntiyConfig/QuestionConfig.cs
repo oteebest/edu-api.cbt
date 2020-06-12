@@ -14,16 +14,23 @@ namespace CbtApi.Infrastructure.Entities.EntiyConfig
              .IsRequired()
              .HasMaxLength(50);
 
-            builder.HasOne(u => u.Topic)
-                .WithMany(u => u.Questions)
-                .HasForeignKey(u => u.TopicId)
-                .IsRequired();
+
+            builder.Property(u => u.Id)
+                    .ValueGeneratedOnAdd();
+
+            builder.HasOne(u => u.DifficultyLevel)
+                .WithMany( u => u.Questions)
+                .HasForeignKey( u => u.DifficultyLevelId);
 
 
-            builder.HasOne(u => u.QuestionGroup)
+            builder.HasOne(u => u.Subject)
                 .WithMany(u => u.Questions)
-                .HasForeignKey(u => u.QuestionGroupId)
-                .IsRequired();
+                .HasForeignKey( u => u.SubjectId);
+
+            builder.HasMany(u => u.Options)
+                .WithOne(u => u.Question)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

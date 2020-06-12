@@ -13,5 +13,8 @@ namespace CbtApi.Infrastructure.Entities
         public Question Question { get; set; }
 
         public string QuestionId { get; set; }
+
+     
+    
     }
 }

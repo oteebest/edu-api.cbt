@@ -7,6 +7,6 @@ namespace CbtApi.Infrastructure.Entities
     public class Entity
     {
         public string Id { get; set; }
-        public DateTimeOffset CreateOn { get; set; } = DateTimeOffset.Now;
+        public DateTimeOffset CreatedOn { get; set; } = DateTimeOffset.Now;
     }
 }
