@@ -12,6 +12,11 @@ namespace CbtApi.Infrastructure.Entities.EntiyConfig
         {
             builder.Property(u => u.Text)
                 .IsRequired();
+
+
+            builder.Property(u => u.Id)
+                    .ValueGeneratedOnAdd();
+
         }
     }
 }

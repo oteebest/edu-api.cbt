@@ -29,7 +29,15 @@ namespace CbtApi.Authorization
 
             var assessmentId = _httpContextAccessor.HttpContext.GetRouteValue("id").ToString();
 
-            var userId = context.User.Claims.FirstOrDefault(u => u.Type.Equals("sub")).Value;
+            var userIdClaim = context.User.Claims.FirstOrDefault(u => u.Type.Equals("sub"));
+
+            if (userIdClaim == null)
+            {
+                context.Fail();
+                return Task.CompletedTask;
+            }
+
+            var userId = userIdClaim.Value;
 
             if (!Guid.TryParse(userId, out Guid userIdIdAsGuid))
             {

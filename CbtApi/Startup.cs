@@ -4,12 +4,14 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using CbtApi.Authorization;
+using CbtApi.Core.Interface.IRepository;
 using CbtApi.Core.Models;
 using CbtApi.Infrastructure.Context;
 using CbtApi.Infrastructure.Entities;
 using CbtApi.Utility;
 using CbtApi.Utility.Filter;
 using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,12 +28,15 @@ namespace CbtApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment webhostEnv)
         {
             Configuration = configuration;
+            WebHostEnvironment = webhostEnv;
+
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -72,18 +77,8 @@ namespace CbtApi
                 client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
             });
 
-            services.AddAuthorization(authorizationOptions =>
-            {
-              
-                authorizationOptions.AddPolicy(
-                   "MustBeAssessmentOwner",
-                   policyBuilder =>
-                   {
-                       policyBuilder.RequireAuthenticatedUser();
-                       policyBuilder.AddRequirements(
-                             new MustBeAssessmentOwnerRequirement());
-                   });
-            });
+           
+
 
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
              .AddIdentityServerAuthentication(options =>
@@ -93,11 +88,11 @@ namespace CbtApi
                  options.ApiSecret = identyOptions.CbtApiSecret;
              });
 
-         
-            services.AddDbContext<AppDbContext>(options =>
-           options.UseNpgsql(Configuration.GetConnectionString("DefaultContext")));
 
-         
+            services.RegisterDB(Configuration, WebHostEnvironment);
+
+            services.RegisterAuthorization();
+
             services.RegisterCoreService(Configuration);
 
             services.ResiterLogger(Configuration);
@@ -105,10 +100,11 @@ namespace CbtApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger logger, ISeederRepoistory seederRepo)
         {
             if (env.IsDevelopment())
             {
+                seederRepo.Seed();
                 app.UseDeveloperExceptionPage();
 
                 IdentityModelEventSource.ShowPII = true;

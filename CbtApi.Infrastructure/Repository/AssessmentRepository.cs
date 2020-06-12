@@ -41,6 +41,33 @@ namespace CbtApi.Infrastructure.Repository
 
         }
 
+        public async Task<AssessmentResponseModel> UpdateAssessmentAsync(string id, AssessmentRequestModel model)
+        {
+            var assessment = _db.Assessments.FirstOrDefault(u => u.Id.Equals(id));
+
+            if (assessment == null) throw new ProcessException("Assessment not found");
+
+            assessment.Duration = model.Duration.Value;
+            assessment.Instructions = model.Instructions;
+            assessment.Name = model.Name;
+           
+            _db.Update(assessment);
+
+            await _db.SaveChangesAsync();
+
+            return assessment.Map();
+
+        }
+
+        public async Task DeleteAssessmentAsync(string id)
+        {
+            var assessment = await _db.Assessments.FindAsync(id);
+            _db.Remove(assessment);
+
+            await _db.SaveChangesAsync();
+
+        }
+
         public async Task<AssessmentResponseModel> GetAssesmentAsync(string assesmentId)
         {
           

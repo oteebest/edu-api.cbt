@@ -1,13 +1,17 @@
-﻿using CbtApi.Core.Interface.IManagers;
+﻿using CbtApi.Authorization;
+using CbtApi.Core.Interface.IManagers;
 using CbtApi.Core.Interface.IRepository;
 using CbtApi.Core.Managers;
 using CbtApi.Core.Models;
+using CbtApi.Infrastructure.Context;
 using CbtApi.Infrastructure.Entities;
 using CbtApi.Infrastructure.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Core;
 using System;
@@ -28,15 +32,16 @@ namespace CbtApi.Utility
             #region Managers
 
             services.AddScoped<IAssessmentManager, AssessmentManager>();
-          
+            services.AddScoped<IQuestionManager, QuestionManager>();
+            
             #endregion
 
 
 
             #region Repository
             services.AddScoped<IAssessmentRepository, AssessmentRepository>();
-            services.AddScoped<ISubscriptionRepository, SubscriptionRespository>();
-            services.AddScoped<ISubscriptionRepository, SubscriptionRespository>();
+            services.AddScoped<IQuestionRepository, QuestionRepository>();
+            services.AddScoped<ISeederRepoistory, SeederRepoistory>();
 
             #endregion
 
@@ -48,6 +53,52 @@ namespace CbtApi.Utility
 
 
         
+
+        }
+
+        public static void RegisterDB(this IServiceCollection services, IConfiguration config,IWebHostEnvironment webHost)
+        {
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseNpgsql(config.GetConnectionString("DefaultContext"));
+
+                if(!webHost.IsProduction())
+                {
+                    options.EnableSensitiveDataLogging(true);
+                }
+                
+            });
+        }
+        public static void RegisterAuthorization(this IServiceCollection services)
+        {
+
+            services.AddScoped<IAuthorizationHandler, MustBeAssessmentOwnerHandler>();
+
+            services.AddScoped<IAuthorizationHandler, MustBeQuestionOwnerHandler>();
+
+            services.AddAuthorization(authorizationOptions =>
+            {
+
+                authorizationOptions.AddPolicy(
+                   "MustBeAssessmentOwner",
+                   policyBuilder =>
+                   {
+                       policyBuilder.RequireAuthenticatedUser();
+                       policyBuilder.AddRequirements(
+                             new MustBeAssessmentOwnerRequirement());
+                   });
+
+                authorizationOptions.AddPolicy(
+                  "MustBeQuestionOwner",
+                  policyBuilder =>
+                  {
+                      policyBuilder.RequireAuthenticatedUser();
+                      policyBuilder.AddRequirements(
+                            new MustBeQuestionOwnerRequirement());
+                  });
+            });
+
+
 
         }
 

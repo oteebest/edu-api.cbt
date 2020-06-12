@@ -2,9 +2,11 @@
 using CbtApi.Core.Interface.IRepository;
 using CbtApi.Core.Models.RequestModels;
 using CbtApi.Core.Models.ResponseModels;
+using CbtApi.Core.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,6 +27,20 @@ namespace CbtApi.Core.Managers
              return await _assessmentRepo.CreateAssessmentAsync(model, userId);
         }
 
+        public async Task DeleteAssesmentAsync(string id)
+        {
+            await _assessmentRepo.DeleteAssessmentAsync(id);
+        }
+
+        public async Task<AssessmentResponseModel> GetAssessmentsAsync(string id)
+        {
+            var assesment = await _assessmentRepo.GetAssesmentAsync(id);
+
+            if (assesment == null) throw new ProcessException("Assessment not found");
+
+            return assesment;
+        }
+
         public async Task<IEnumerable<AssessmentResponseModel>> GetUserAssessmentsAsync(string userId)
         {
             return await _assessmentRepo.GetUserAsessmentsAsync(userId);
@@ -36,6 +52,11 @@ namespace CbtApi.Core.Managers
             return await _assessmentRepo.AssesmentBelongsToUserAsync(assesmentId, userId);
 
 
+        }
+
+        public async Task<AssessmentResponseModel> UpdateAssessmentAsync(string id, AssessmentRequestModel model)
+        {           
+            return await _assessmentRepo.UpdateAssessmentAsync(id,model);
         }
     }
 }
