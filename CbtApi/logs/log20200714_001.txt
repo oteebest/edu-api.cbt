@@ -78,3 +78,4 @@
     File: d:\pginstaller_12.auto\postgres.windows-x64\src\backend\executor\nodelimit.c
     Line: 262
     Routine: recompute_limits
+2020-07-14 23:06:24.180 +01:00 [INF] Starting up
