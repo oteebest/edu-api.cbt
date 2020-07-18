@@ -11,6 +11,46 @@ namespace CbtApi.Core.Util
 {
     public static class Mapper
     {
+
+     
+
+        public static DifficultLevelResponseModel Map(this DifficultyLevel entity)
+        {
+            if (entity == null) return null;
+
+            return new DifficultLevelResponseModel
+            {
+                Name = entity.Name,
+                Id = entity.Id,
+            };
+
+        }
+
+
+        public static Subject Map(this SubjectResponseModel model)
+        {
+            if (model == null) return null;
+
+            return new Subject
+            {
+                Name = model.Name,
+                Id = model.Id,
+            };
+
+        }
+
+        public static SubjectResponseModel Map(this Subject entity)
+        {
+            if (entity == null) return null;
+
+            return new SubjectResponseModel
+            {
+                Name = entity.Name,
+                Id = entity.Id,
+            };
+
+        }
+
         public static Assessment Map(this AssessmentRequestModel model, string userId)
         {
             if (model == null) return null;
