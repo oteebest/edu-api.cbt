@@ -33,6 +33,7 @@ namespace CbtApi.Utility
 
             services.AddScoped<IAssessmentManager, AssessmentManager>();
             services.AddScoped<IQuestionManager, QuestionManager>();
+            services.AddScoped<IPredefindDataManager, PredefindDataManager>();
             
             #endregion
 
@@ -42,6 +43,7 @@ namespace CbtApi.Utility
             services.AddScoped<IAssessmentRepository, AssessmentRepository>();
             services.AddScoped<IQuestionRepository, QuestionRepository>();
             services.AddScoped<ISeederRepoistory, SeederRepoistory>();
+            services.AddScoped<IPredefinedDataRespository, PredefinedDataRespository>();
 
             #endregion
 
@@ -52,7 +54,7 @@ namespace CbtApi.Utility
             #endregion
 
 
-        
+
 
         }
 

@@ -30,7 +30,8 @@ namespace CbtApi.Core.Managers
 
         public async Task<PagedModel<QuestionResponseModel>> GetUserQuestionsAsync(string userId,string subjectId,string difficultyLevelId,int pageNumber,int pageSize)
         {
-            
+            pageNumber = pageNumber < 1 ? 1 : pageNumber;
+
             return await _questionRepo.GetUserQuestionsAsync(userId, subjectId, difficultyLevelId,pageNumber,pageSize);
 
         }

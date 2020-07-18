@@ -55,7 +55,7 @@ namespace CbtApi.Controllers
         [HttpGet("")]
         public async Task<IActionResult> GetQuestions(string subjectId,string difficultyLevelId,int pageNumber = 1,int pageSize = 20 )
         {
-
+           
             var userId = User.Claims.First(u => u.Type.Equals("sub")).Value;
 
             var newQuestion = await _questionManager.GetUserQuestionsAsync(userId,subjectId,difficultyLevelId, pageNumber,pageSize);
