@@ -54,8 +54,6 @@ namespace CbtApi.Utility
             #endregion
 
 
-
-
         }
 
         public static void RegisterDB(this IServiceCollection services, IConfiguration config,IWebHostEnvironment webHost)

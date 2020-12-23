@@ -17,9 +17,6 @@ namespace CbtApi.Core.Models.RequestModels
         public string Text { get; set; }
 
 
-        [Required(ErrorMessage = "Select number of options")]
-        public int ? OptionCount { get; set; }
-
         [Required(ErrorMessage = "Indicate schuffle option")]
         public bool ? ShuffleOptions { get; set; }
 

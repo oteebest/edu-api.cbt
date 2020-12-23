@@ -1,5 +1,6 @@
 ﻿using CbtApi.Core.Interface.IRepository;
 using CbtApi.Core.Models;
+using CbtApi.Core.Models.Models;
 using CbtApi.Core.Models.RequestModels;
 using CbtApi.Core.Models.ResponseModels;
 using CbtApi.Core.Util;
@@ -25,7 +26,7 @@ namespace CbtApi.Infrastructure.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<QuestionResponseModel> CreateQuestionAsync(QuestionRequestModel model, string userId)
+        public async Task<QuestionModel> CreateQuestionAsync(QuestionRequestModel model, string userId)
         {
           
             var question = model.Map(userId);
@@ -34,31 +35,29 @@ namespace CbtApi.Infrastructure.Repository
 
             await _dbContext.SaveChangesAsync();
 
-            return  await GetQuestionsAsync(question.Id);
+            return  await GetQuestionAsync(question.Id);
 
         }
 
-        public Task DeleteQuestionAsync(string id)
-        {
-            throw new NotImplementedException();
+        public async Task<int> DeleteQuestionAsync(string id)
+        {           
+            var count = await _dbContext.Database.ExecuteSqlInterpolatedAsync($"Delete question Where id = {id}");
+            return count;
         }
 
-        public Task<List<QuestionResponseModel>> GetAssessmentQuestionsAsync(string id)
-        {
-            throw new NotImplementedException();
-        }
+     
 
-        public async Task<QuestionResponseModel> GetQuestionsAsync(string id)
+        public async Task<QuestionModel> GetQuestionAsync(string id)
         {
             var question = await _dbContext.Questions
-                                           .Include( u => u.DifficultyLevel)
-                                           .Include( u => u.Subject)
-                                           .FirstOrDefaultAsync(u => u.Id.Equals(id));
+                                           .Include(u => u.DifficultyLevel)
+                                           .Include(u => u.Subject)
+                                           .FirstOrDefaultAsync(u => u.Id.Equals(id)); ;
 
             return question.Map();
         }
 
-        public async Task<PagedModel<QuestionResponseModel>> GetUserQuestionsAsync(string userId, string subjectId,
+        public async Task<PagedModel<QuestionModel>> GetUserQuestionsAsync(string userId, string subjectId,
             string difficultyLevelId, int pageNumber, int pageSize)
         {
 
@@ -81,7 +80,7 @@ namespace CbtApi.Infrastructure.Repository
             var data = await queryable.ToPagedList(pageNumber, pageSize);
 
 
-            return new PagedModel<QuestionResponseModel>(data.Items.Select(u => u.Map()).ToArray(),
+            return new PagedModel<QuestionModel>(data.Items.Select(u => u.Map()).ToArray(),
                data.TotalSize,  data.PageNumber, data.PageSize);
 
         }
@@ -97,7 +96,7 @@ namespace CbtApi.Infrastructure.Repository
 
    
 
-        public async Task<QuestionResponseModel> UpdateQuestionAsync(string questionId, QuestionRequestModel model, string userId)
+        public async Task<QuestionModel> UpdateQuestionAsync(string questionId, QuestionRequestModel model, string userId)
         {
             using (var transaction = _dbContext.Database.BeginTransaction())
             {
@@ -109,7 +108,6 @@ namespace CbtApi.Infrastructure.Repository
                     entity.Text = model.Text;
                     entity.SubjectId = model.SubjectId;
                     entity.ScoreValue = model.ScoreValue.Value;
-                    entity.OptionCount = model.OptionCount.Value;
                     entity.QuestionType = model.QuestionType;
                     entity.ShuffleOptions = model.ShuffleOptions.Value;
                     entity.DifficultyLevelId = model.DifficultyLevelId;
@@ -134,7 +132,7 @@ namespace CbtApi.Infrastructure.Repository
             }
             
 
-            return await GetQuestionsAsync(questionId);
+            return await GetQuestionAsync(questionId);
         }
     }
 }

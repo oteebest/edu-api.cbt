@@ -59,14 +59,10 @@ namespace CbtApi
                 });
             });
 
-            services.AddControllers( options =>
-            {
-                options.Filters.Add(typeof(ValidateModelStateAttribute));
-            });
+            services.AddControllers();
 
             var identyOptions = new IdentityOptions();
             Configuration.GetSection("IdentityOptions").Bind(identyOptions);
-
 
             services.AddHttpContextAccessor();
 
