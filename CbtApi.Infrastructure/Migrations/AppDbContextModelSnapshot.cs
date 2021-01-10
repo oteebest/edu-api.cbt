@@ -124,9 +124,6 @@ namespace CbtApi.Infrastructure.Migrations
                     b.Property<string>("DifficultyLevelId")
                         .HasColumnType("text");
 
-                    b.Property<int>("OptionCount")
-                        .HasColumnType("integer");
-
                     b.Property<string>("QuestionType")
                         .IsRequired()
                         .HasColumnType("character varying(50)")

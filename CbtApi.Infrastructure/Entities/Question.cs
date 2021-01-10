@@ -8,7 +8,6 @@ namespace CbtApi.Infrastructure.Entities
     {
         public string QuestionType { get; set; }     
         public int ScoreValue { get; set; }
-        public int OptionCount { get; set; }
         public bool ShuffleOptions { get; set; }
         public List<Option> Options { get; set; }     
         public string UserId { get; set; }

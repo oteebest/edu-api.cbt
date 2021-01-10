@@ -10,10 +10,17 @@ namespace CbtApi.Core.Interface.IManagers
 {
     public interface IQuestionManager
     {
+
+       
         Task<QuestionResponseModel> CreateQuestionAsync(QuestionRequestModel model, string userId);
         Task<bool> IsOwnerOfQuestionAsync(string questionId, string userId);
         Task<QuestionResponseModel> UpdateQuestionAsync(string questionId,QuestionRequestModel model, string userId);
 
         Task<PagedModel<QuestionResponseModel>> GetUserQuestionsAsync(string userId, string subjectId, string difficultyLevelId, int pageNumber, int pageSize);
+     
+        Task<bool> DeleteQuestionAsync(string questionId);
+
+        Task<QuestionResponseModel> GetUserQuestionAsync(string userId, string questionId);
+
     }
 }

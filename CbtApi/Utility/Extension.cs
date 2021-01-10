@@ -1,11 +1,13 @@
 ﻿using CbtApi.Authorization;
 using CbtApi.Core.Interface.IManagers;
 using CbtApi.Core.Interface.IRepository;
+using CbtApi.Core.Interface.IValidator;
 using CbtApi.Core.Managers;
 using CbtApi.Core.Models;
 using CbtApi.Infrastructure.Context;
 using CbtApi.Infrastructure.Entities;
 using CbtApi.Infrastructure.Repository;
+using CbtApi.Infrastructure.Validator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -34,10 +36,13 @@ namespace CbtApi.Utility
             services.AddScoped<IAssessmentManager, AssessmentManager>();
             services.AddScoped<IQuestionManager, QuestionManager>();
             services.AddScoped<IPredefindDataManager, PredefindDataManager>();
-            
+
             #endregion
 
-
+            #region Validators
+            services.AddScoped<IAssessmentValidator, AssessmentValidator>();
+            services.AddScoped<IQuestionValidator, QuestionValidator>();
+            #endregion
 
             #region Repository
             services.AddScoped<IAssessmentRepository, AssessmentRepository>();
@@ -52,8 +57,6 @@ namespace CbtApi.Utility
             #region Service
 
             #endregion
-
-
 
 
         }

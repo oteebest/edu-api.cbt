@@ -1,4 +1,6 @@
-﻿using CbtApi.Core.Models.RequestModels;
+﻿using CbtApi.Core.Models;
+using CbtApi.Core.Models.Models;
+using CbtApi.Core.Models.RequestModels;
 using CbtApi.Core.Models.ResponseModels;
 using CbtApi.Infrastructure.Entities;
 using System;
@@ -65,6 +67,7 @@ namespace CbtApi.Core.Util
 
         }
 
+
         public static AssessmentResponseModel Map(this Assessment entity)
         {
             if (entity == null) return null;
@@ -108,7 +111,6 @@ namespace CbtApi.Core.Util
                 Text = model.Text,
                 QuestionType = model.QuestionType,
                 ShuffleOptions = model.ShuffleOptions.Value,
-                OptionCount = model.OptionCount.Value,
                 SubjectId = model.SubjectId,
                 DifficultyLevelId = model.DifficultyLevelId,
                 UserId = userId,
@@ -129,25 +131,22 @@ namespace CbtApi.Core.Util
             return question;
         }
 
+        
     
-
-        public static QuestionResponseModel Map(this Question entity)
+        public static T Map<T>(this Question model) where T : QuestionModelBase, new()
         {
 
-            if (entity == null) return null;
+            if (model == null) return null;
 
-            QuestionResponseModel question = new QuestionResponseModel
-            {   Id = entity.Id,
-                Text = entity.Text,
-                ScoreValue = entity.ScoreValue,
-                QuestionType = entity.QuestionType,
-                DifficultyLevelId = entity.DifficultyLevelId,
-                DifficultyLevel = entity.DifficultyLevel.Name,
-                SubjectId = entity.SubjectId,
-                Subject = entity.Subject.Name,
-                ShuffleOptions = entity.ShuffleOptions,
-                OptionCount = entity.OptionCount,
-                Options = entity.Options.Select(u => new QuestionOption
+            return new T
+            {
+                ScoreValue = model.ScoreValue,
+                Text = model.Text,
+                QuestionType = model.QuestionType,
+                ShuffleOptions = model.ShuffleOptions,
+                SubjectId = model.SubjectId,
+                DifficultyLevelId = model.DifficultyLevelId,
+                Options = model.Options.Select(u => new QuestionOption
                 {
                     IsAnswer = u.IsAnswer,
                     Text = u.Text
@@ -155,8 +154,10 @@ namespace CbtApi.Core.Util
 
             };
 
-            return question;
         }
+
+
+
 
     }
 }

@@ -14,7 +14,7 @@ namespace CbtApi.Controllers
     [ApiController]
     [Route("api/v1/[controller]")]
     [Authorize]
-    public class AssessmentController : Controller
+    public class AssessmentController : BaseController
     {
         private readonly IAssessmentManager _assMan;
 

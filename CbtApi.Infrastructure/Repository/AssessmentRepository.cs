@@ -31,6 +31,7 @@ namespace CbtApi.Infrastructure.Repository
 
         public async Task<AssessmentResponseModel> CreateAssessmentAsync(AssessmentRequestModel model,string userId)
         {
+
             var entity = model.Map(userId);
 
             _db.Assessments.Add(entity);

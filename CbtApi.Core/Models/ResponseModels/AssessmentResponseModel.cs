@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CbtApi.Core.Models.ResponseModels
 {
-    public class AssessmentResponseModel : AssessmentRequestModel
+    public class AssessmentResponseModel : AsssesmentProcessingBaseModel
     {
         public string Id { get; set; }
         public DateTimeOffset CreatedOn { get; set; }
