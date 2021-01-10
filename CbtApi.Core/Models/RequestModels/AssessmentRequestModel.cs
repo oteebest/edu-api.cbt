@@ -5,15 +5,8 @@ using System.Text;
 
 namespace CbtApi.Core.Models.RequestModels
 {
-    public class AssessmentRequestModel 
+    public class AssessmentRequestModel : AsssesmentProcessingBaseModel
     {
-        [Required(ErrorMessage ="Enter assessment name")]
-        public string Name { get; set; }
-
-        [Required(ErrorMessage = "Enter assessment instructions")]
-        public string Instructions { get; set; }
-
-        [Required(ErrorMessage = "Enter duration in minutes")]
-        public int ? Duration { get; set; }
+      
     }
 }

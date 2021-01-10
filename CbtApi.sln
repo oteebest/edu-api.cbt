@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CbtApi.Core", "CbtApi.Core\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CbtApi.Infrastructure", "CbtApi.Infrastructure\CbtApi.Infrastructure.csproj", "{3C2102D5-EEBD-43EC-B782-02D4A55CC836}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CbtApi.Test", "CbtApi.Test\CbtApi.Test.csproj", "{1460ED4C-5199-4CA6-9A60-72772B4186C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CbtApi.Core.Test", "CbtApi.Test\CbtApi.Core.Test.csproj", "{1460ED4C-5199-4CA6-9A60-72772B4186C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,6 +1,8 @@
 ﻿using CbtApi.Core.Interface.IRepository;
+using CbtApi.Core.Interface.IValidator;
 using CbtApi.Core.Managers;
 using CbtApi.Core.Models.RequestModels;
+using CbtApi.Infrastructure.Validator;
 using CbtApi.Test.CoreTests.TestData;
 using Moq;
 using System;
@@ -13,14 +15,12 @@ namespace CbtApi.Test.CoreTests.ValidationTest
     public class QuestionValidationTest
     {
        
-        private readonly QuestionManager _questionManager;
-        private readonly Mock<IQuestionRepository> _questionRepoMock;
+        private readonly QuestionValidator _questionValidator;
 
         public QuestionValidationTest()
         {
-            _questionRepoMock = new Mock<IQuestionRepository>();
-
-            _questionManager = new QuestionManager(_questionRepoMock.Object);
+            
+            _questionValidator = new QuestionValidator();
 
            
         }
@@ -32,7 +32,7 @@ namespace CbtApi.Test.CoreTests.ValidationTest
         [Theory]
         public void ValidateNumberOfOptions(QuestionRequestModel requestModel)
         {
-            bool success = _questionManager.ValidateNumberOfOptions(requestModel, out string message);
+            bool success = _questionValidator.ValidateNumberOfOptions(requestModel, out string message);
 
             Assert.True(success, message);
 
@@ -42,7 +42,7 @@ namespace CbtApi.Test.CoreTests.ValidationTest
         [ClassData(typeof(QuestionTestData))]       
         public void ValidateQuestionOptions(QuestionRequestModel requestModel)
         {
-            bool success = _questionManager.ValidateQuestionOptions(requestModel, out string message);
+            bool success = _questionValidator.ValidateQuestionOptions(requestModel, out string message);
 
             Assert.True(success, message);
 
@@ -52,7 +52,7 @@ namespace CbtApi.Test.CoreTests.ValidationTest
         [ClassData(typeof(QuestionTestData))]       
         public void ValidateQuestionType(QuestionRequestModel requestModel)
         {
-            bool success = _questionManager.ValidateQuestionType(requestModel, out string message);
+            bool success = _questionValidator.ValidateQuestionType(requestModel, out string message);
 
             Assert.True(success, message);
 
@@ -62,7 +62,7 @@ namespace CbtApi.Test.CoreTests.ValidationTest
         [Theory]
         public void ValidateQuestion(QuestionRequestModel requestModel)
         {
-            bool success = _questionManager.ValidateQuestion(requestModel, out string message);
+            bool success = _questionValidator.ValidateQuestion(requestModel, out string message);
 
             Assert.True(success, message);
 

@@ -67,7 +67,6 @@ namespace CbtApi.Core.Util
 
         }
 
-   
 
         public static AssessmentResponseModel Map(this Assessment entity)
         {
@@ -132,27 +131,22 @@ namespace CbtApi.Core.Util
             return question;
         }
 
+        
     
-
-     
-        public static QuestionModel Map(this Question entity)
+        public static T Map<T>(this Question model) where T : QuestionModelBase, new()
         {
 
-            if (entity == null) return null;
+            if (model == null) return null;
 
-            QuestionModel question = new QuestionModel
+            return new T
             {
-                Id = entity.Id,
-                Text = entity.Text,
-                ScoreValue = entity.ScoreValue,
-                QuestionType = entity.QuestionType,
-                DifficultyLevelId = entity.DifficultyLevelId,
-                DifficultyLevel = entity.DifficultyLevel.Name,
-                SubjectId = entity.SubjectId,
-                Subject = entity.Subject.Name,
-                ShuffleOptions = entity.ShuffleOptions,
-                UserId = entity.UserId,
-                Options = entity.Options.Select(u => new QuestionOption
+                ScoreValue = model.ScoreValue,
+                Text = model.Text,
+                QuestionType = model.QuestionType,
+                ShuffleOptions = model.ShuffleOptions,
+                SubjectId = model.SubjectId,
+                DifficultyLevelId = model.DifficultyLevelId,
+                Options = model.Options.Select(u => new QuestionOption
                 {
                     IsAnswer = u.IsAnswer,
                     Text = u.Text
@@ -160,8 +154,10 @@ namespace CbtApi.Core.Util
 
             };
 
-            return question;
         }
+
+
+
 
     }
 }

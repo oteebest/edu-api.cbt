@@ -18,7 +18,7 @@ namespace CbtApi.Core.Interface.IManagers
 
         Task<PagedModel<QuestionResponseModel>> GetUserQuestionsAsync(string userId, string subjectId, string difficultyLevelId, int pageNumber, int pageSize);
      
-        Task<bool> DeleteQuestionAsync(string questionId, string userId );
+        Task<bool> DeleteQuestionAsync(string questionId);
 
         Task<QuestionResponseModel> GetUserQuestionAsync(string userId, string questionId);
 

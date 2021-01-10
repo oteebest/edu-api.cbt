@@ -12,16 +12,16 @@ namespace CbtApi.Core.Interface.IRepository
     public interface IQuestionRepository
     {
 
-        Task<QuestionModel> CreateQuestionAsync(QuestionRequestModel model, string userId);
+        Task<QuestionResponseModel> CreateQuestionAsync(QuestionRequestModel model, string userId);
 
 
          Task<int> DeleteQuestionAsync(string questionId);
      
-        Task<QuestionModel> GetQuestionAsync(string id);
+        Task<QuestionResponseModel> GetQuestionAsync(string id);
 
         Task<bool> IsOwnerOfQuestionAsync(string id, string userId);
-        Task<QuestionModel> UpdateQuestionAsync(string questionId, QuestionRequestModel model, string userId);
-        Task<PagedModel<QuestionModel>> GetUserQuestionsAsync(string userId, string subjectId,
+        Task<QuestionResponseModel> UpdateQuestionAsync(string questionId, QuestionRequestModel model, string userId);
+        Task<PagedModel<QuestionResponseModel>> GetUserQuestionsAsync(string userId, string subjectId,
                 string difficultyLevelId, int pageNumber, int pageSize);
         
     }

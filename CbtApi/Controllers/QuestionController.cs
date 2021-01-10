@@ -83,10 +83,7 @@ namespace CbtApi.Controllers
         [Authorize("MustBeQuestionOwner")]
         public async Task<IActionResult> DeleteQuestion(string id)
         {
-
-            var userId = User.Claims.First(u => u.Type.Equals("sub")).Value;
-
-            await _questionManager.DeleteQuestionAsync(id, userId);
+            await _questionManager.DeleteQuestionAsync(id);
 
             var response = new ResponseModel<object>(null, true, "Question deleted successfully");
 

@@ -1,4 +1,5 @@
-﻿using CbtApi.Core.Models.RequestModels;
+﻿using CbtApi.Core.Models.Models;
+using CbtApi.Core.Models.RequestModels;
 using System;
 using System.Collections.Generic;
 using System.Text;

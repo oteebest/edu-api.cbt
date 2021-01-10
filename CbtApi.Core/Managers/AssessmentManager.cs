@@ -1,5 +1,6 @@
 ﻿using CbtApi.Core.Interface.IManagers;
 using CbtApi.Core.Interface.IRepository;
+using CbtApi.Core.Interface.IValidator;
 using CbtApi.Core.Models.RequestModels;
 using CbtApi.Core.Models.ResponseModels;
 using CbtApi.Core.Util;
@@ -15,15 +16,25 @@ namespace CbtApi.Core.Managers
     public class AssessmentManager : IAssessmentManager
     {
         private readonly IAssessmentRepository _assessmentRepo;
-     
 
-        public AssessmentManager(IAssessmentRepository assessmentRepo)
+        private readonly IAssessmentValidator _assessmentValidator;
+
+        public AssessmentManager(IAssessmentRepository assessmentRepo,
+            IAssessmentValidator assessmentValidator)
         {
             _assessmentRepo = assessmentRepo;
+            _assessmentValidator = assessmentValidator;
         }
 
         public  async Task<AssessmentResponseModel> CreateAssessment(AssessmentRequestModel model,string userId)
         {
+            bool durationIsGreaterThanZero = _assessmentValidator.AssessmentDurationIsGreaterThanZero(model);
+
+            if(!durationIsGreaterThanZero)
+            {
+                throw new ProcessException("Assessment duration is less than 1");
+            }
+
              return await _assessmentRepo.CreateAssessmentAsync(model, userId);
         }
 

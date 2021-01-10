@@ -8,7 +8,6 @@ namespace CbtApi.Core.Interface.IRepository
 {
     public interface IAssessmentQuestion
     {
-        Task<List<QuestionModel>> GetAssessmentQuestionsAsync(string id);
-
+       
     }
 }
